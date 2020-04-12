@@ -1,9 +1,13 @@
 package cn.edu.shu.intelldesk;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
+@MapperScan("cn.edu.shu.intelldesk.mapper")
 @SpringBootApplication
+@EnableCaching
 public class IntelldeskApplication {
 
     public static void main(String[] args) {
