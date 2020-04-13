@@ -16,4 +16,9 @@ public class FinishedStorageService {
         FinishedStorage finishedStorage= finishedStorageMapper.getAllFinishedStorageById(id);
         return finishedStorage;
     }
+
+
+    public List<FinishedStorage> getAllMessage() {
+        return finishedStorageMapper.getAllFinishedStorage();
+    }
 }
