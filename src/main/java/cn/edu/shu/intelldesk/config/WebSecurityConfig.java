@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -93,6 +94,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                                      Authentication auth) throws IOException, ServletException {
                      resp.setContentType("application/json;charset=utf-8");
                      RespBean respBean = RespBean.ok("登录成功!", HrUtils.getCurrentHr());
+                     ObjectMapper om = new ObjectMapper();
+                     PrintWriter out = resp.getWriter();
+                     out.write(om.writeValueAsString(respBean));
+                     out.flush();
+                     out.close();
+                 }
+             })
+             .permitAll()
+             .and()
+             .logout()
+             .logoutUrl("/logout")
+             .logoutSuccessHandler(new LogoutSuccessHandler() {
+                 @Override
+                 public void onLogoutSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication authentication) throws IOException, ServletException {
+                     resp.setContentType("application/json;charset=utf-8");
+                     RespBean respBean = RespBean.ok("注销成功!");
                      ObjectMapper om = new ObjectMapper();
                      PrintWriter out = resp.getWriter();
                      out.write(om.writeValueAsString(respBean));
