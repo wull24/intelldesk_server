@@ -3,7 +3,35 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.shu.intelldesk.mapper.RawStorageMapper">
-    <select id="getAllRawStorage" resultType="cn.edu.shu.intelldesk.entity.RawStorage">
-        select * from rawstorage ;
+    <resultMap id="BaseResultMap" type="cn.edu.shu.intelldesk.entity.RawStorage">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <collection property="material" ofType="cn.edu.shu.intelldesk.entity.Material">
+            <id column="mid" property="id"/>
+            <result column="mname" property="name"/>
+            <result column="mnameZh" property="nameZh"/>
+        </collection>
+    </resultMap>
+
+    <select id="getAllRawStorage" resultMap="BaseResultMap">
+        select r.* ,m.`id` as mid,m.`name` as mname,m.`nameZh` as mnameZh
+        from rawstorage r
+        left join rawstorage_material rm on r.`id`= rm.`rawstorage_id`
+        left join material m on rm.`material_id` = m.`id`
     </select>
+    <select id="getRawStorageById" resultMap="BaseResultMap">
+        select r.* ,m.`id` as mid,m.`name` as mname,m.`nameZh` as mnameZh
+        from rawstorage r
+        left join rawstorage_material rm on r.`id`= rm.`rawstorage_id`
+        left join material m on rm.`material_id` = m.`id`
+        where r.id = #{sid}
+        order by r.id
+    </select>
+    <insert id="addMaterialToStorageById">
+        insert into rawstorage_material(rawstorage_id,material_id) value (#{storageId},#{materialId})
+    </insert>
+
+    <delete id="removeMaterialFromStorageById" parameterType="Integer">
+        DELETE FROM rawstorage_material where rawstorage_id=#{rId}
+    </delete>
 </mapper>

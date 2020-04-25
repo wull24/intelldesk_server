@@ -4,6 +4,7 @@ import cn.edu.shu.intelldesk.entity.FinishedStorage;
 import cn.edu.shu.intelldesk.service.FinishedStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,5 +19,10 @@ public class FinishedStorageController {
     @GetMapping("/getAllFinishedStorage")
     public List<FinishedStorage> getAllMessage(){
         return finishedStorageService.getAllMessage();
+    }
+
+    @PutMapping("/takeProductionById")
+    public void takeProductionById(Integer storageId){
+        finishedStorageService.takeProductionById(storageId);
     }
 }

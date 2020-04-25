@@ -1,18 +1,9 @@
 package cn.edu.shu.intelldesk.entity;
 
-public class FinishedStorage {
+public class Image {
     private Integer id;
     private String name;
-    private OrderList order;
-    private User user;
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    private String nameZh;
 
     public Integer getId() {
         return id;
@@ -30,20 +21,20 @@ public class FinishedStorage {
         this.name = name;
     }
 
-    public OrderList getOrder() {
-        return order;
+    public String getNameZh() {
+        return nameZh;
     }
 
-    public void setOrder(OrderList order) {
-        this.order = order;
+    public void setNameZh(String nameZh) {
+        this.nameZh = nameZh;
     }
 
     @Override
     public String toString() {
-        return "FinishedStorage{" +
+        return "Image{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", order=" + order +
+                ", nameZh='" + nameZh + '\'' +
                 '}';
     }
 }

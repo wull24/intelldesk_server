@@ -2,31 +2,39 @@ package cn.edu.shu.intelldesk.entity;
 
 public class RawStorage {
     private Integer id;
-    private Integer material;
-
-    private Integer state;
+    private String name;
+    private Material material;
 
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
-    public Integer getMaterial() {
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Material getMaterial() {
         return material;
     }
-    public void setMaterial(Integer material) {
+
+    public void setMaterial(Material material) {
         this.material = material;
     }
 
-    public Integer getState() {
-        return state;
-    }
-    public void setState(Integer state) {
-        this.state = state;
-    }
     @Override
     public String toString() {
-        return "RawStorage [id=" + id + ", material=" + material + ", state=" + state + "]";
+        return "RawStorage{" +
+                "id=" + id +
+                ", name=" + name +
+                ", material=" + material +
+                '}';
     }
 }

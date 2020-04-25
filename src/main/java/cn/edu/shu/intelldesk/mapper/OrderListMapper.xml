@@ -3,7 +3,57 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.shu.intelldesk.mapper.OrderListMapper">
-    <select id="getAllOrderList" resultType="cn.edu.shu.intelldesk.entity.OrderList">
-        select * from orderlist ;
+    <resultMap id="BaseResultMap" type="cn.edu.shu.intelldesk.entity.OrderList">
+    <id column="id" property="id" jdbcType="INTEGER"/>
+    <result column="ordertime" property="orderTime" />
+    <result column="finishedtime" property="finishedTime" />
+    <result column="image" property="image" />
+    <result column="material" property="material" />
+    <result column="state" property="state" />
+    <result column="customer_id" property="customer_id" />
+    <collection property="user" ofType="cn.edu.shu.intelldesk.entity.User">
+        <id column="uid" property="id"/>
+        <result column="name" property="name"/>
+        <result column="telephone" property="telephone"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+    </collection>
+    <collection property="finishedStorage" ofType="cn.edu.shu.intelldesk.entity.FinishedStorage">
+            <id column="fid" property="id"/>
+            <result column="fname" property="name"/>
+    </collection>
+</resultMap>
+    <resultMap id="OrderList" type="cn.edu.shu.intelldesk.entity.OrderList">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="ordertime" property="orderTime" />
+        <result column="finishedtime" property="finishedTime" />
+        <result column="image" property="image" />
+        <result column="material" property="material" />
+        <result column="state" property="state" />
+        <result column="customer_id" property="customer_id" />
+    </resultMap>
+    <select id="getOrderListByPage" resultMap="BaseResultMap">
+        select o.*,u.`name`,u.`telephone`,u.`phone`,u.`address`,f.name as fname
+        from orderlist o
+        left join  user u on u.`id` =  o.`customer_id`
+        left join  finishedstorage f on f.id in (select finishedstorage_id from finishedstorage_order fo where order_id = o.id )
+        order by o.id limit #{start}, #{size};
+    </select>
+    <select id="getOrderListById" parameterType="Integer" resultMap="OrderList">
+        select o.* from orderlist o
+        where o.id = #{id}
+    </select>
+    <update id="updateOrder" parameterType="cn.edu.shu.intelldesk.entity.OrderList">
+        update orderlist
+        <set>
+            state = #{ol.state},finishedtime = #{ol.finishedTime}
+        </set>
+        where id = #{ol.id}
+    </update>
+    <select id="getTotalCount" resultType="Integer">
+        select count(*) from orderlist
+    </select>
+    <select id="getAllOrderList" resultMap="BaseResultMap">
+        select o.* from orderlist o
     </select>
 </mapper>

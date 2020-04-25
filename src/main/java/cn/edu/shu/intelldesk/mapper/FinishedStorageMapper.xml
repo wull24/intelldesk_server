@@ -3,10 +3,45 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.shu.intelldesk.mapper.FinishedStorageMapper">
+    <resultMap id="BaseResultMap" type="cn.edu.shu.intelldesk.entity.FinishedStorage">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" />
+
+        <association property="order" javaType="cn.edu.shu.intelldesk.entity.OrderList">
+            <id column="oid" property="id" jdbcType="INTEGER"/>
+            <result column="ordertime" property="orderTime" />
+            <result column="finishedtime" property="finishedTime" />
+            <result column="image" property="image" />
+            <result column="material" property="material" />
+            <result column="state" property="state" />
+            <result column="customer_id" property="customer_id" />
+        </association>
+        <association property="user" javaType="cn.edu.shu.intelldesk.entity.User">
+            <id column="uid" property="id"/>
+            <result column="uname" property="name"/>
+            <result column="telephone" property="telephone"/>
+            <result column="phone" property="phone"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
     <select id="getAllFinishedStorageById" resultType="cn.edu.shu.intelldesk.entity.FinishedStorage">
         select * from finishedstorage WHERE id=#{id};
     </select>
-    <select id="getAllFinishedStorage" resultType="cn.edu.shu.intelldesk.entity.FinishedStorage">
-        select * from finishedstorage ;
+    <select id="getAllFinishedStorage" resultMap="BaseResultMap">
+        select f.* ,o.id as oid, o.`ordertime`,o.`finishedtime`,o.`image`,o.`material`,
+        u.`name` as `uname`,u.`telephone`,u.`phone`,u.`address`
+        from ((finishedstorage f left join finishedstorage_order fs on(fs.finishedstorage_id = f.id)) left join orderlist o on (fs.order_id = o.id) left join
+        user u on (u.id = o.customer_id))
+        order by f.id
     </select>
+    <select id="getFinishedStorageById" resultMap="BaseResultMap">
+        select f.* , o.id as oid, o.`ordertime`,o.`finishedtime`,o.`image`,o.`material`,
+        u.`name` as `uname`,u.`telephone`,u.`phone`,u.`address`
+        from ((finishedstorage f left join finishedstorage_order fs on(fs.finishedstorage_id = f.id)) left join orderlist o on (fs.order_id = o.id) left join
+        user u on (u.id = o.customer_id))
+        where f.id = #{storageId}
+    </select>
+    <delete id="removeOrderLinkWithFinishedStorage" parameterType="Integer">
+        DELETE FROM finishedstorage_order where finishedstorage_id=#{storageId}
+    </delete>
 </mapper>

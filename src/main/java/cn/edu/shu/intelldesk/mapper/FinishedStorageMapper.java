@@ -11,4 +11,8 @@ public interface FinishedStorageMapper {
     FinishedStorage getAllFinishedStorageById(Integer id);
 
     List<FinishedStorage> getAllFinishedStorage();
+
+    FinishedStorage getFinishedStorageById(Integer storageId);
+
+    void removeOrderLinkWithFinishedStorage(Integer storageId);
 }

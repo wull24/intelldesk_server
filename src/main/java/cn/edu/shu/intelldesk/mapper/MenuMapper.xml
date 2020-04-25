@@ -46,5 +46,4 @@
               where h_r.`role_id`=mr.`rid` and h_r.`user_id`=#{userId})
         order by m1.`id`,m2.`id`
     </select>
-
 </mapper>

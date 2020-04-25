@@ -9,4 +9,10 @@ import java.util.List;
 public interface RawStorageMapper {
 
     List<RawStorage> getAllRawStorage();
+
+    void addMaterialToStorageById(String storageId, String materialId);
+
+    RawStorage getRawStorageById(Integer sid);
+
+    void removeMaterialFromStorageById(Integer sid);
 }
