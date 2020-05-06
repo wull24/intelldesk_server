@@ -7,6 +7,15 @@ public class RespBean {
     private Integer status;
     private String msg;
     private Object obj;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     private RespBean() {
     }
@@ -16,25 +25,28 @@ public class RespBean {
     }
 
     public static RespBean ok(String msg, Object obj) {
-        return new RespBean(200, msg, obj);
+        return new RespBean(200, msg, obj,null);
     }
 
     public static RespBean ok(String msg) {
-        return new RespBean(200, msg, null);
+        return new RespBean(200, msg, null,null);
     }
 
     public static RespBean error(String msg, Object obj) {
-        return new RespBean(500, msg, obj);
+        return new RespBean(500, msg, obj,null);
     }
 
     public static RespBean error(String msg) {
-        return new RespBean(500, msg, null);
+        return new RespBean(500, msg, null,null);
     }
 
-    private RespBean(Integer status, String msg, Object obj) {
+    public static RespBean ok(String msg,Object obj, String token){return new RespBean(200,msg,obj,token);}
+
+    private RespBean(Integer status, String msg, Object obj,String token) {
         this.status = status;
         this.msg = msg;
         this.obj = obj;
+        this.token = token;
     }
 
     public Integer getStatus() {

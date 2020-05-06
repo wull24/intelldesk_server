@@ -2,10 +2,13 @@ package cn.edu.shu.intelldesk.config;
 
 import cn.edu.shu.intelldesk.common.HrUtils;
 import cn.edu.shu.intelldesk.entity.RespBean;
+import cn.edu.shu.intelldesk.filter.JwtFilter;
+import cn.edu.shu.intelldesk.filter.JwtLoginFilter;
 import cn.edu.shu.intelldesk.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import javax.servlet.ServletException;
@@ -55,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-     http
+     /*http
              .authorizeRequests()
              .antMatchers("/index.html","/static/**")
              .permitAll()
@@ -129,7 +133,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
              .and()
              .httpBasic()
              .and()
-             .csrf().disable();
+             .csrf().disable();*/
+        http.authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/login")
+                .permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(new JwtLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable();
 
 }
 
