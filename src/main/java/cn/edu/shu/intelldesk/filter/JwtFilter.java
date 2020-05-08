@@ -26,11 +26,10 @@ public class JwtFilter extends GenericFilterBean {
 //强转为http
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         //获得token，这里是从头中获得
-        System.out.println(req);
 
+        try {
             String jwtToken = req.getHeader("authorization");
 
-        System.out.println(jwtToken);
             Jws<Claims> jws = Jwts.parser().setSigningKey("wull")
                     .parseClaimsJws(jwtToken.replace("Bearer", ""));//将头上的bearer这几个字符去除
             Claims claims = jws.getBody();//获得token中的数据
@@ -38,7 +37,10 @@ public class JwtFilter extends GenericFilterBean {
             List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));//获得角色
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, null, authorities);//校验
             SecurityContextHolder.getContext().setAuthentication(token);
-            filterChain.doFilter(servletRequest,servletResponse);
+            filterChain.doFilter(servletRequest, servletResponse);
+        }catch (Exception e){
+
+        }
 
     }
 }

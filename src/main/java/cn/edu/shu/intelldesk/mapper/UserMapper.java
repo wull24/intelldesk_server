@@ -14,4 +14,5 @@ public interface UserMapper {
 
     //配合loadUserByUserName进行角色信息的查询
     List<Role> getRolesByUserId(Long id);
+
 }

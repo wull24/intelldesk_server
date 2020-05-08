@@ -23,4 +23,9 @@ public class UserService implements UserDetailsService {
     }
     return user;
     }
+
+    public Long getUserIdByUserName(String username) {
+       User user = userMapper.loadUserByUserName(username);
+        return user.getId();
+    }
 }

@@ -41,6 +41,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse httpServletResponse)
             throws AuthenticationException, IOException, ServletException {
 
+        //这里首先使用流接收然后使用login进行接收，在写入user。此为无奈之举，应为直接接收user的password接收不了
         BufferedReader br;
         StringBuilder sb = null;
         String jsonString = null;
@@ -52,7 +53,6 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            System.out.println(sb);
             jsonString = URLDecoder.decode(sb.toString(), "UTF-8");
             jsonString = jsonString.substring(jsonString.indexOf("{"));
         } catch (IOException e) {
@@ -63,7 +63,6 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
         Gson gson = new Gson();
         Login m = new Login();
         m = gson.fromJson(s, m.getClass());
-        System.out.println(m);
         /*Login l = new ObjectMapper().readValue(req.getInputStream(),Login.class);
         System.out.println(l);*/
         /*User user = new ObjectMapper().readValue(req.getInputStream(),User.class);
@@ -79,6 +78,7 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse resp, FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
+        resp.setContentType("application/json;charset=utf-8");
         Collection<? extends GrantedAuthority> authorities = authResult.getAuthorities();//获取登录用户的角色
         StringBuffer sb = new StringBuffer();
         for (GrantedAuthority authority : authorities) {
@@ -92,7 +92,9 @@ public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter{
                 .signWith(SignatureAlgorithm.HS512, "wull")//设置签名的算法，以及密钥
                 .compact();
         //设置返回的对象
-        RespBean respBean = RespBean.ok("登录成功!",null ,jwt);//HrUtils.getCurrentHr()
+        User user = (User)authResult.getPrincipal();
+        user.setPassword("");
+        RespBean respBean = RespBean.ok("登录成功!",user ,jwt);//HrUtils.getCurrentHr()
         ObjectMapper om = new ObjectMapper();
         PrintWriter out = resp.getWriter();
         out.write(om.writeValueAsString(respBean));

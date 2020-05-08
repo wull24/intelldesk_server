@@ -10,14 +10,14 @@ import java.util.Collection;
 import java.util.List;
 
 public class User implements UserDetails {
+    private String username;
+    private String password;
     private Long id;
     private String name;
     private String phone;
     private String telephone;
     private String address;
     private boolean enabled;
-    private String username;
-    private String password;
     private String remark;
     private List<Role> roles;
     private String userface;
